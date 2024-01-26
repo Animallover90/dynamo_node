@@ -22,7 +22,10 @@ def lambda_handler(event, context):
             elif record['eventName'] == 'REMOVE':
             	if (record['userIdentity']['principalId'] == 'dynamodb.amazonaws.com'):
             		oldRecords.append(record)
-        handle_remove(oldRecords)
+
+		result_array = split_json_array(oldRecords, 500)
+        for a in result_array:
+        	handle_remove(a)
     except Exception as e:
         logging.error(e)
         return "Error"
